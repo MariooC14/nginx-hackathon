@@ -3,6 +3,8 @@ import { ModeToggle } from "./components/mode-toggle"
 import { Button } from "./components/ui/button"
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart"
 import { Bar, BarChart } from "recharts";
+import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
+import { AppSidebar } from "./components/app-sidebar";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -28,15 +30,21 @@ const chartConfig = {
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      Hello World
-      <Button>Button</Button>
-      <ModeToggle />
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-        <BarChart accessibilityLayer data={chartData}>
-          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-          <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-        </BarChart>
-      </ChartContainer>
+      <SidebarProvider>
+        <AppSidebar />
+        <main>
+          <SidebarTrigger />
+          Hello World
+          <Button>Button</Button>
+          <ModeToggle />
+          <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+            <BarChart accessibilityLayer data={chartData}>
+              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </main>
+      </SidebarProvider>
     </ThemeProvider>
   )
 }
