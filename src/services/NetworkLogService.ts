@@ -1,53 +1,72 @@
-import type {NetworkLog} from "@/types";
-import {parseNetworkLogs} from "@/lib/utils";
+import type { NetworkLog } from "@/types";
 
-export class NetworkLogService {
-    private static instance: NetworkLogService;
-    private logs: NetworkLog[] = [];
+class NetworkLogService {
+  private logs: NetworkLog[] = [];
 
-    private constructor() {
+  async init() {
+    try {
+      this.logs = await this.parseNetworkLogs();
+    } catch (error) {
+      console.error("Error fetching logs:", error);
     }
+  }
 
-    public static getInstance(): NetworkLogService {
-        if (!NetworkLogService.instance) {
-            NetworkLogService.instance = new NetworkLogService();
+  async parseNetworkLogs() {
+    try {
+      const response = await fetch("/src/assets/access.log");
+      const text = await response.text();
+      const lines = text.split("\n").filter(line => line.trim() !== "");
+
+      const networkLogs: NetworkLog[] = [];
+
+      for (const line of lines) {
+        // Regular expression to match NGINX log format
+        const regex =
+          /^(\S+) - - \[(.*?)\] "(\S+) (\S+) (\S+)" (\d+) (\d+) ".*?" "([^"]*)"$/;
+        const match = line.match(regex);
+
+        if (match) {
+          const [
+            ,
+            ip,
+            dateStr,
+            method,
+            path,
+            version,
+            status,
+            size,
+            userAgent,
+          ] = match;
+
+          // Convert date string to timestamp
+          const timestamp = new Date(dateStr.replace(":", " ")).getTime();
+
+          networkLogs.push({
+            ip,
+            timestamp,
+            request: {
+              method,
+              path,
+              version,
+            },
+            status: parseInt(status),
+            size: parseInt(size),
+            userAgent,
+            isAnomaly: false,
+          });
         }
-        return NetworkLogService.instance;
-    }
+      }
 
-    async fetchLogs(): Promise<NetworkLog[]> {
-        try {
-            this.logs = await parseNetworkLogs();
-            return this.logs;
-        } catch (error) {
-            console.error("Error fetching logs:", error);
-            return [];
-        }
+      return networkLogs;
+    } catch (error) {
+      console.error("Error parsing network logs:", error);
+      return [];
     }
+  }
 
-    filterLogs(predicate: (log: NetworkLog) => boolean): NetworkLog[] {
-        return this.logs.filter(predicate);
-    }
-
-    updateLogNote(timestamp: number, ip: string, note: string): void {
-        const logEntry = this.logs.find(log =>
-            log.timestamp === timestamp && log.ip === ip
-        );
-        if (logEntry) {
-            logEntry.note = note;
-        }
-    }
-
-    markAsAnomaly(timestamp: number, ip: string, isAnomaly: boolean): void {
-        const logEntry = this.logs.find(log =>
-            log.timestamp === timestamp && log.ip === ip
-        );
-        if (logEntry) {
-            logEntry.isAnomaly = isAnomaly;
-        }
-    }
-
-    getAllLogs(): NetworkLog[] {
-        return [...this.logs];
-    }
+  getLogs() {
+    return this.logs;
+  }
 }
+
+export const networkLogService = new NetworkLogService();
