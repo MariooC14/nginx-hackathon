@@ -1,5 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import AnomalyDetailsDialog from "./AnomalyDetailsDialog";
 import type { Anomaly } from "@/services/AnomalyService";
 
 export const columns: ColumnDef<Anomaly>[] = [
@@ -17,10 +16,6 @@ export const columns: ColumnDef<Anomaly>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      return (
-        <AnomalyDetailsDialog anomaly={row.original} />
-      )
-    },
+    header: "Actions",
   },
 ]
