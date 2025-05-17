@@ -234,7 +234,8 @@ export function DataTable() {
                         column.toggleVisibility(value)
                       }
                     >
-                      {column.id}
+                      {/*Replaces underscore with space, capitalizes each word*/}
+                      {column.id.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                     </DropdownMenuCheckboxItem>
                   )
                 })}
