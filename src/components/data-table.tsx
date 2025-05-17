@@ -34,11 +34,8 @@ import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { networkLogService } from "@/services/NetworkLogService"
-import { detectAnomalies } from "@/services/netstats.ts";
-
-const formatDate = (timestamp: number): string => {
-  return new Date(timestamp).toLocaleString();
-};
+import { formatDate } from "@/lib/utils"
+// import { anomalyService } from "@/services/AnomalyService"
 
 export type Request = {
   method: string;
@@ -169,8 +166,8 @@ export function DataTable() {
   React.useEffect(() => {
     const fetchData = async () => {
       setData(networkLogService.getLogs());
-      const anomalies = await detectAnomalies();
-      setData(anomalies);
+      // const anomalies = await anomalyService.scanForAnomalies();
+      // setData(anomalies);
     };
     fetchData().catch(console.error);
   }, []);

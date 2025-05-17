@@ -1,28 +1,25 @@
 import { TypographyH1 } from "@/components/ui/TypographyH1";
 import { AnomaliesDataTable } from "./data-table";
 import { columns as anomaliesColumns } from "./columns";
-import { detectAnomalies } from "@/services/netstats";
 import { useEffect, useState } from "react";
-import type { NetworkLog } from "@/types";
+import { anomalyService, type Anomaly } from "@/services/AnomalyService";
 import GeoMap from "@/components/geoMap.tsx";
-import {IPtoLocation, type LocationData} from "@/services/gpsService.ts";
+import { IPtoLocation, type LocationData } from "@/services/gpsService.ts";
 
 export default function AnomaliesPage() {
-  const [anomalyLogs, setAnomalyLogs] = useState<NetworkLog[]>([]);
+  const [anomalyLogs, setAnomalyLogs] = useState<Anomaly[]>([]);
   const [locations, setLocations] = useState<LocationData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    detectAnomalies()
-      .then(logs => {
-        setAnomalyLogs(logs.filter(log => log.isAnomaly));
-      })
-      .catch(error => {
-        console.error("Error fetching network logs:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const anomalies = anomalyService.scanForAnomalies();
+    setAnomalyLogs(anomalies);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    IPtoLocation("43.130.40.120", "185.198.228.124")
+      .then(newLocations => setLocations(newLocations));
   }, []);
 
   useEffect(() => {
