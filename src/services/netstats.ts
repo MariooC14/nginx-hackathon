@@ -1,3 +1,4 @@
+import type { NetworkLog } from "@/types";
 import { networkLogService } from "../services/NetworkLogService";
 
 export type LogEntry = {
@@ -17,10 +18,10 @@ export type LogEntry = {
 
 export type TimeFilter = "day" | "week" | "month" | "all";
 
-const filterLogsByTime = (
-  logs: LogEntry[],
+export const filterLogsByTime = (
+  logs: NetworkLog[],
   timeFilter: TimeFilter
-): LogEntry[] => {
+) => {
   if (timeFilter === "all") return logs;
 
   const now = Date.now();
@@ -89,79 +90,4 @@ export const getTotalSize = async (timeFilter: TimeFilter = "all") => {
   const logs = networkLogService.getLogs();
   const filteredLogs = filterLogsByTime(logs, timeFilter);
   return filteredLogs.reduce((total, log) => total + log.size, 0);
-};
-
-/**
- * Detect anomalies in logs and mark them
- * @param timeFilter Optional time period to analyze
- * @returns Updated logs with anomalies marked
- */
-export const detectAnomalies = async (timeFilter: TimeFilter = "all") => {
-  const logs = networkLogService.getLogs();
-  const filteredLogs = filterLogsByTime(logs, timeFilter);
-  const updatedLogs = [...filteredLogs];
-
-  // Group logs by IP
-  const logsByIp = updatedLogs.reduce<Record<string, LogEntry[]>>(
-    (acc, log) => {
-      if (!log.ip) return acc;
-      acc[log.ip] = acc[log.ip] || [];
-      acc[log.ip].push(log);
-      return acc;
-    },
-    {}
-  );
-
-  Object.entries(logsByIp).forEach(([ip, ipLogs]) => {
-    if (!ip) return;
-
-    // Check for high frequency requests (more than 100 per minute)
-    const timeWindowMs = 60000;
-    const requestsPerMinute = new Map<number, number>();
-
-    ipLogs.forEach(log => {
-      const minute = Math.floor(log.timestamp / timeWindowMs);
-      requestsPerMinute.set(minute, (requestsPerMinute.get(minute) || 0) + 1);
-      const requestCount = requestsPerMinute.get(minute) || 0;
-      if (requestCount > 100) {
-        // networkLogService.markAsAnomaly(log.timestamp, ip, true);
-        // networkLogService.updateLogNote(
-        //   log.timestamp,
-        //   ip,
-        //   "High frequency requests detected (>100/min)"
-        // );
-      }
-    });
-
-    // Check for error patterns
-    let consecutiveErrors = 0;
-    const errorCount = ipLogs.filter(log => log.status >= 400).length;
-    const errorRate = errorCount / ipLogs.length;
-
-    ipLogs.forEach(log => {
-      if (log.status >= 400) {
-        consecutiveErrors++;
-        if (consecutiveErrors >= 5) {
-          //   networkLogService.markAsAnomaly(log.timestamp, ip, true);
-          //   networkLogService.updateLogNote(
-          //     log.timestamp,
-          //     ip,
-          //     `${consecutiveErrors} consecutive errors detected`
-          //   );
-        }
-        if (errorRate > 0.2) {
-          //   networkLogService.markAsAnomaly(log.timestamp, ip, true);
-          //   networkLogService.updateLogNote(
-          //     log.timestamp,
-          //     ip,
-          //     `High error rate: ${(errorRate * 100).toFixed(1)}%`
-          //   );
-        }
-      } else {
-        consecutiveErrors = 0;
-      }
-    });
-  });
-
-  return networkLogService.getLogs();
 };
