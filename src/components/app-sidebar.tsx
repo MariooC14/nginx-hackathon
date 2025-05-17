@@ -38,7 +38,7 @@ export function AppSidebar() {
     <Sidebar variant="floating">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>NGINX Analyzer</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
