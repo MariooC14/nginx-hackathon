@@ -29,7 +29,7 @@ let geoCache: GeoCache = {};
 
 async function loadGeoCache() {
   try {
-    const response = await fetch('/src/assets/geo-cache.json');
+    const response = await fetch("/src/assets/geo-cache.json");
     geoCache = await response.json();
   } catch (error) {
     geoCache = {};
@@ -38,19 +38,21 @@ async function loadGeoCache() {
 
 async function saveGeoCache() {
   try {
-    const response = await fetch('/src/assets/geo-cache.json', {
-      method: 'POST',
+    const response = await fetch("/src/assets/geo-cache.json", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(geoCache),
     });
     return response.ok;
   } catch (error) {
-    console.error('Failed to save geo cache:', error);
+    console.error("Failed to save geo cache:", error);
     return false;
   }
 }
+
+const apiKey = import.meta.env.VITE_GEOAPI_KEY;
 
 export async function IPtoLocation(...ips: string[]): Promise<LocationData[]> {
   await loadGeoCache();
@@ -63,8 +65,9 @@ export async function IPtoLocation(...ips: string[]): Promise<LocationData[]> {
       continue;
     }
 
-    const apiKey = import.meta.env.VITE_GEOAPI_KEY;
-    const response = await fetch(`https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${apiKey}`);
+    const response = await fetch(
+      `https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${apiKey}`
+    );
     const data: GeoAPIResponse = await response.json();
     const locationData = parseLocationData(data);
 
@@ -81,6 +84,6 @@ export function parseLocationData(response: GeoAPIResponse): LocationData {
     city: response.city.names.en,
     country: response.country.name,
     latitude: response.location.latitude,
-    longitude: response.location.longitude
+    longitude: response.location.longitude,
   };
 }
