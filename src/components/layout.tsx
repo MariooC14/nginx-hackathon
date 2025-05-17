@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <SidebarProvider defaultOpen={true}>
         <AppSidebar />
-        <main>
+        <main className="max-w-full">
           <SidebarTrigger />
           {children}
         </main>
