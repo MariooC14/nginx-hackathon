@@ -12,10 +12,10 @@ import {
   getFilteredRowModel,
   type ColumnFiltersState,
 } from "@tanstack/react-table"
-import {ArrowUpDown, ChevronDown} from "lucide-react"
+import { ArrowUpDown, ChevronDown } from "lucide-react"
 
-import {Button} from "@/components/ui/button"
-import {Checkbox} from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,11 +30,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {Switch} from "@/components/ui/switch"
-import {Input} from "@/components/ui/input"
-import {useVirtualizer} from "@tanstack/react-virtual"
-import {NetworkLogService} from "@/services/NetworkLogService"
-import {detectAnomalies} from "@/services/netstats.ts";
+import { Switch } from "@/components/ui/switch"
+import { Input } from "@/components/ui/input"
+import { useVirtualizer } from "@tanstack/react-virtual"
+import { networkLogService } from "@/services/NetworkLogService"
+import { detectAnomalies } from "@/services/netstats.ts";
 
 const formatDate = (timestamp: number): string => {
   return new Date(timestamp).toLocaleString();
@@ -60,7 +60,7 @@ export type Data = {
 const columns: ColumnDef<Data>[] = [
   {
     id: "select",
-    header: ({table}) => (
+    header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllRowsSelected() ||
@@ -70,7 +70,7 @@ const columns: ColumnDef<Data>[] = [
         aria-label="Select all"
       />
     ),
-    cell: ({row}) => (
+    cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(value === true)}
@@ -82,38 +82,38 @@ const columns: ColumnDef<Data>[] = [
   },
   {
     accessorKey: "ip",
-    header: ({column}) => (
+    header: ({ column }) => (
       <Button
         variant={column.getIsSorted() ? "default" : "ghost"}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         IP
-        <ArrowUpDown className="ml-2 h-4 w-4"/>
+        <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
     accessorKey: "timestamp",
-    header: ({column}) => (
+    header: ({ column }) => (
       <Button
         variant={column.getIsSorted() ? "default" : "ghost"}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Timestamp
-        <ArrowUpDown className="ml-2 h-4 w-4"/>
+        <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({row}) => formatDate(row.getValue("timestamp")),
+    cell: ({ row }) => formatDate(row.getValue("timestamp")),
   },
   {
     accessorKey: "request.method",
-    header: ({column}) => (
+    header: ({ column }) => (
       <Button
         variant={column.getIsSorted() ? "default" : "ghost"}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Method
-        <ArrowUpDown className="ml-2 h-4 w-4"/>
+        <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
@@ -127,32 +127,32 @@ const columns: ColumnDef<Data>[] = [
   },
   {
     accessorKey: "status",
-    header: ({column}) => (
+    header: ({ column }) => (
       <Button
         variant={column.getIsSorted() ? "default" : "ghost"}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Status
-        <ArrowUpDown className="ml-2 h-4 w-4"/>
+        <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
     accessorKey: "size",
-    header: ({column}) => (
+    header: ({ column }) => (
       <Button
         variant={column.getIsSorted() ? "default" : "ghost"}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Size
-        <ArrowUpDown className="ml-2 h-4 w-4"/>
+        <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
     accessorKey: "userAgent",
     header: "User Agent",
-    cell: ({row}) => <div className="truncate max-w-xs">{row.getValue("userAgent")}</div>,
+    cell: ({ row }) => <div className="truncate max-w-xs">{row.getValue("userAgent")}</div>,
   },
 ]
 
@@ -168,9 +168,7 @@ export function DataTable() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const networkLogService = NetworkLogService.getInstance();
-      const logs = await networkLogService.fetchLogs();
-      setData(logs);
+      setData(networkLogService.getLogs());
       const anomalies = await detectAnomalies();
       setData(anomalies);
     };
@@ -195,7 +193,7 @@ export function DataTable() {
     },
   })
 
-  const {rows} = table.getRowModel()
+  const { rows } = table.getRowModel()
 
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
@@ -207,22 +205,22 @@ export function DataTable() {
   return (
     <div className="w-full p-4">
       <div className="flex items-center justify-between py-4">
-          <Input
-            placeholder="Search..."
-            value={table.getState().globalFilter ?? ""}
-            onChange={event => table.setGlobalFilter(event.target.value)}
-            className="max-w-sm"
-          />
+        <Input
+          placeholder="Search..."
+          value={table.getState().globalFilter ?? ""}
+          onChange={event => table.setGlobalFilter(event.target.value)}
+          className="max-w-sm"
+        />
         <div className="flex gap-2">
           <div className="flex items-center space-x-2">
             <label htmlFor="highlight-anomalies" className="text-sm">Show Anomalies</label>
             <Switch onCheckedChange={() => setHighlightAnomalies(!highlightAnomalies)} id="highlight-anomalies"
-                    checked={highlightAnomalies}/>
+              checked={highlightAnomalies} />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                Columns <ChevronDown className="ml-2 h-4 w-4"/>
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -272,7 +270,7 @@ export function DataTable() {
             <TableBody>
               {rowVirtualizer.getVirtualItems().length > 0 ? (
                 <>
-                  <tr style={{height: `${rowVirtualizer.getVirtualItems()[0]?.start || 0}px`}}/>
+                  <tr style={{ height: `${rowVirtualizer.getVirtualItems()[0]?.start || 0}px` }} />
 
                   {rowVirtualizer.getVirtualItems().map(virtualRow => {
                     const row = rows[virtualRow.index]
