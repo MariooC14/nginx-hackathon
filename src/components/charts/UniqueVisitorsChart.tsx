@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { XAxis, YAxis, CartesianGrid, AreaChart, Area } from "recharts";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNetworkLogs } from "@/NetworkLogsProvider";
@@ -16,6 +16,9 @@ type VisitorsData = {
 };
 
 const chartConfig = {
+  visitors:{
+    label: "Visitors",
+  }
 } satisfies ChartConfig
 
 const TIME_FILTERS = [
@@ -130,10 +133,14 @@ useEffect(() => {
       <CardContent>
         <ChartContainer
         config={chartConfig}
-        className="aspect-auto h-[250px] w-full"
-        >
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={data}>
+        className="aspect-auto h-[250px] w-full">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="colorVisitors" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#6366f1" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
             dataKey="date"
@@ -168,9 +175,15 @@ useEffect(() => {
                 />
               }
             />
-            <Line type="monotone" dataKey="visitors" stroke="#6366f1" strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
+            <Area
+              type="monotone"
+              dataKey="visitors"
+              stroke="#6366f1"
+              strokeWidth={2}
+              fill="url(#colorVisitors)"
+              dot={false}
+            />
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>

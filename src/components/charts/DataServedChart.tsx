@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { XAxis, YAxis, CartesianGrid, AreaChart, Area } from "recharts";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNetworkLogs } from "@/NetworkLogsProvider";
@@ -16,6 +16,15 @@ type DataServedData = {
 };
 
 const chartConfig = {
+  bytes: {
+    label: "Bytes",
+  },
+  label: {
+    color: "hsl(var(--background))",
+  },
+  visitors: {
+    label: "Visitors",
+  },
 } satisfies ChartConfig
 
 const TIME_FILTERS = [
@@ -141,11 +150,16 @@ export default function DataServedChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer
-        config={chartConfig}
-        className="aspect-auto h-[250px] w-full"
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
         >
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={data}>
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="colorVisitors" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="date"
@@ -164,6 +178,7 @@ export default function DataServedChart() {
             <YAxis
               tickFormatter={formatBytes}
               allowDecimals={false}
+              domain={[0, 'auto']}
             />
             <ChartTooltip
               cursor={false}
@@ -182,9 +197,15 @@ export default function DataServedChart() {
                 />
               }
             />
-            <Line type="monotone" dataKey="bytes" stroke="#10b981" strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
+            <Area
+              type="monotone"
+              dataKey="bytes"
+              stroke="#10b981"
+              strokeWidth={2}
+              dot={false}
+              fill="url(#colorVisitors)"
+            />
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>
