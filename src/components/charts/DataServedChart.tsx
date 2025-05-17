@@ -22,9 +22,9 @@ const chartConfig = {
 } satisfies ChartConfig
 
 const TIME_FILTERS = [
-  { label: "Last 24 hours", value: "day", days: 1 },
-  { label: "Last 7 days", value: "week", days: 7 },
-  { label: "Last 30 days", value: "month", days: 30 },
+  { label: "Last 24 hours", value: "24h", days: 1 },
+  { label: "Last 7 days", value: "7d", days: 7 },
+  { label: "Last 30 days", value: "30d", days: 30 },
 ];
 
 function formatBytes(bytes: number) {
@@ -37,7 +37,7 @@ function formatBytes(bytes: number) {
 export default function DataServedChart() {
   const logs = useNetworkLogs();
   const [data, setData] = useState<DataServedData[]>([]);
-  const [timeRange, setTimeRange] = useState("month");
+  const [timeRange, setTimeRange] = useState("30d");
 
   useEffect(() => {
     if (!logs.length) {
@@ -50,7 +50,7 @@ export default function DataServedChart() {
     const filter = TIME_FILTERS.find(f => f.value === timeRange);
     const days = filter?.days ?? 30;
 
-    if (timeRange === "day") {
+    if (timeRange === "24h") {
       // Group by hour for the last 24 hours
       const hours: string[] = [];
       const bytesByHour: Record<string, number> = {};
@@ -122,7 +122,7 @@ export default function DataServedChart() {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Data Served</CardTitle>
           <CardDescription>
-            Total bytes served per {timeRange === "day" ? "hour" : "day"}
+            Total bytes served per {timeRange === "24h" ? "hour" : "day"}
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -130,11 +130,15 @@ export default function DataServedChart() {
             <SelectValue placeholder="Last 30 days" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            {TIME_FILTERS.map(f => (
-              <SelectItem key={f.value} value={f.value} className="rounded-lg">
-                {f.label}
-              </SelectItem>
-            ))}
+            <SelectItem value="30d" className="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7d" className="rounded-lg">
+              Last 7 days
+            </SelectItem>
+            <SelectItem value="24h" className="rounded-lg">
+              Last 24 hours
+            </SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
@@ -153,7 +157,7 @@ export default function DataServedChart() {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={value => {
-                if (timeRange === "day") {
+                if (timeRange === "24h") {
                   return new Date(value).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
                 } else {
                   return new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -164,21 +168,14 @@ export default function DataServedChart() {
               tickFormatter={formatBytes}
               allowDecimals={false}
             />
-            {/* <Tooltip
-              formatter={value => formatBytes(Number(value))}
-              labelFormatter={value => {
-                if (timeRange === "day") {
-                  return new Date(value).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-                } else {
-                  return new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-                }
-              }}
-            /> */}
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
+                    if(timeRange === "24h") {
+                      return new Date(value).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+                    }
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
