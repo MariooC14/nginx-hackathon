@@ -1,4 +1,4 @@
-import { CircleGauge, Logs, } from "lucide-react"
+import { CircleGauge, Logs, ShieldAlert } from "lucide-react"
 
 import {
   Sidebar,
@@ -20,6 +20,11 @@ const items = [
     title: "Dashboard",
     url: "/",
     icon: CircleGauge,
+  },
+  {
+    title: "Anomalies",
+    url: "/anomalies",
+    icon: ShieldAlert,
   },
   {
     title: "Logs",
