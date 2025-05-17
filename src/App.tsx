@@ -3,6 +3,8 @@ import NetworkLogGrid from "./components/NetworkLogGrid";
 import NetworkChartsView from "./components/NetworkChartsView";
 import { useNetworkLogs } from "./NetworkLogsProvider";
 import { useEffect } from "react";
+import { mockNetworkLogs } from "./mocks/networkLogMock";
+import DataTable from "./components/data-table";
 
 function App() {
   const logs = useNetworkLogs();
@@ -19,6 +21,9 @@ function App() {
 
       {/* Table area */}
       <NetworkLogGrid />
+        <div>
+            <DataTable data={mockNetworkLogs} />
+        </div>
     </Layout>
   );
 }
