@@ -1,4 +1,5 @@
 export type NetworkLog = {
+  id: number;
   ip: string;
   timestamp: number;
   request: {
