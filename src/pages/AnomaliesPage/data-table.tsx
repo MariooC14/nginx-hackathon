@@ -16,17 +16,23 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { DataTableViewOptions } from "./table-view-options"
+import { DrawerTrigger } from "@/components/ui/drawer"
+import type { Anomaly } from "@/services/AnomalyService"
+import { MoreHorizontal } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  loading?: boolean
+  loading?: boolean,
+  onSelect: Dispatch<SetStateAction<Anomaly | null>>
 }
 
 export function AnomaliesDataTable<TData, TValue>({
   columns,
   data,
-  loading = false
+  loading = false,
+  onSelect,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -89,7 +95,15 @@ export function AnomaliesDataTable<TData, TValue>({
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {cell.column.id === "actions" ? (
+                            <DrawerTrigger asChild>
+                              <Button variant="ghost" size="icon" onClick={() => onSelect(row.original as Anomaly)}>
+                                <MoreHorizontal />
+                              </Button>
+                            </DrawerTrigger>
+                          ) : (
+                            flexRender(cell.column.columnDef.cell, cell.getContext())
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
@@ -119,7 +133,8 @@ export function AnomaliesDataTable<TData, TValue>({
               >
                 Next
               </Button>
-            </div></>
+            </div>
+          </>
         }
       </div>
     </>
