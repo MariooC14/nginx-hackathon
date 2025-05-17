@@ -22,14 +22,14 @@ const chartConfig = {
 
 const TIME_FILTERS = [
   { label: "Last 24 hours", value: "24h", days: 1 },
-  { label: "Last 7 days", value: "week", days: 7 },
-  { label: "Last 30 days", value: "month", days: 30 },
+  { label: "Last 7 days", value: "7d", days: 7 },
+  { label: "Last 30 days", value: "30d", days: 30 },
 ];
 
 export default function UniqueVisitorsChart() {
   const logs = useNetworkLogs();
   const [data, setData] = useState<VisitorsData[]>([]);
-  const [timeRange, setTimeRange] = useState("month");
+  const [timeRange, setTimeRange] = useState("30d");
 
 useEffect(() => {
   if (!logs.length) {
@@ -113,9 +113,8 @@ useEffect(() => {
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
             className="w-[160px] rounded-lg sm:ml-auto"
-            aria-label="Select a value"
-          >
-            <SelectValue placeholder="Last 3 months" />
+            aria-label="Select a value">
+            <SelectValue placeholder="Last 30 days" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
             <SelectItem value="30d" className="rounded-lg">
