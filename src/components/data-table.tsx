@@ -207,15 +207,15 @@ export function DataTable() {
   return (
     <div className="w-full p-4">
       <div className="flex items-center justify-between py-4">
-        <Input
-          placeholder="Search..."
-          value={table.getState().globalFilter ?? ""}
-          onChange={event => table.setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
+          <Input
+            placeholder="Search..."
+            value={table.getState().globalFilter ?? ""}
+            onChange={event => table.setGlobalFilter(event.target.value)}
+            className="max-w-sm"
+          />
         <div className="flex gap-2">
-          <div className="flex flex-col items-end">
-            <label htmlFor="highlight-anomalies" className="text-sm">Highlight Anomalies</label>
+          <div className="flex items-center space-x-2">
+            <label htmlFor="highlight-anomalies" className="text-sm">Show Anomalies</label>
             <Switch onCheckedChange={() => setHighlightAnomalies(!highlightAnomalies)} id="highlight-anomalies"
                     checked={highlightAnomalies}/>
           </div>
@@ -250,9 +250,9 @@ export function DataTable() {
       <div className="rounded-md border">
         <div
           ref={tableContainerRef}
-          className="w-full h-[400px] overflow-auto"
+          className="w-full h-[calc(100vh-200px)] overflow-auto"
         >
-          <Table className="w-full min-w-[800px] h-full min-h-[800px]">
+          <Table className="w-full min-w-[500px] h-full min-h-[800px]">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
