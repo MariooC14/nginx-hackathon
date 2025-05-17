@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Pie, PieChart, LabelList } from "recharts"
+import { Pie, PieChart, LabelList, ResponsiveContainer } from "recharts"
 
 import {
   Card,
@@ -49,24 +49,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const renderLegend = (props: { payload?: { value: string; color: string; payload: { value: number } }[] }) => {
-  const { payload } = props;
-  return (
-    <ul className="flex flex-col gap-2">
-      {payload?.map((entry, index) => (
-        <li key={`item-${index}`} className="flex items-center gap-2">
-          <span
-            className="inline-block w-3 h-3 rounded-full"
-            style={{ backgroundColor: entry.color }}
-          />
-          <span className="text-sm">
-            {chartConfig[entry.value as keyof typeof chartConfig]?.label} ({entry.payload.value})
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-};
 
 export default function StatusPieChart() {
   const logs = useNetworkLogs();
@@ -106,45 +88,49 @@ export default function StatusPieChart() {
   }, [logs]);
 
   return (
-    <Card className="">
+    <Card className="@container/card w-full h-full">
       <CardHeader className="items-center">
         <CardTitle>HTTP Status Code Distribution</CardTitle>
         <CardDescription>January - June 2025</CardDescription>
       </CardHeader>
-      <CardContent className="pb-0">
+      <CardContent className="flex flex-1 justify-center pb-0">
         <ChartContainer
           config={chartConfig}
-          className="max-h-[250px] flex justify-center items-center"
+          className="max-h-[300px] flex justify-center items-center"
         >
-          <PieChart width={350} height={250}>
-            <ChartTooltip
-              content={<ChartTooltipContent nameKey="status" hideLabel />}
-            />
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="status"
-              innerRadius={30}
-              strokeWidth={5}
-              labelLine={false}
-            >
-              <LabelList
-                dataKey="percent"
-                position="inside"
-                className="fill-background"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: number) => `${value.toFixed(1)}%`}
-              />
-            </Pie>
-            <ChartLegend
-              content={<ChartLegendContent nameKey="status" />}
-              layout="vertical"
-              align="right"
-              verticalAlign="middle"
-              className="flex flex-col gap-2 w-[80px] ml-2"
-            />
-          </PieChart>
+          <div style={{ width: "100%", height: 250 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <ChartTooltip
+                  content={<ChartTooltipContent nameKey="status" hideLabel />}
+                />
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="status"
+                  innerRadius={30}
+                  strokeWidth={5}
+                  labelLine={false}
+                >
+                  <LabelList
+                    dataKey="percent"
+                    position="inside"
+                    className="fill-background"
+                    stroke="none"
+                    fontSize={12}
+                    formatter={(value: number) => `${value.toFixed(1)}%`}
+                  />
+                </Pie>
+                <ChartLegend
+                  content={<ChartLegendContent nameKey="status" />}
+                  layout="vertical"
+                  align="right"
+                  verticalAlign="middle"
+                  className="flex flex-col gap-2 w-[80px] ml-2"
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
