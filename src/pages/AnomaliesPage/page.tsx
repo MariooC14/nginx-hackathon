@@ -4,9 +4,12 @@ import { columns as anomaliesColumns } from "./columns";
 import { detectAnomalies } from "@/services/netstats";
 import { useEffect, useState } from "react";
 import type { NetworkLog } from "@/types";
+import GeoMap from "@/components/geoMap.tsx";
+import {IPtoLocation, type LocationData} from "@/services/gpsService.ts";
 
 export default function AnomaliesPage() {
   const [anomalyLogs, setAnomalyLogs] = useState<NetworkLog[]>([]);
+  const [locations, setLocations] = useState<LocationData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,12 +25,18 @@ export default function AnomaliesPage() {
       });
   }, []);
 
+  useEffect(() => {
+    IPtoLocation("43.130.40.120", "185.198.228.124")
+      .then(newLocations => setLocations(newLocations));
+  }, []);
+
   return (
     <>
       <TypographyH1 className="inline">Anomalies</TypographyH1>
       <div>
         <AnomaliesDataTable columns={anomaliesColumns} data={anomalyLogs} loading={loading} />
       </div>
+      <GeoMap locations={locations}></GeoMap>
     </>
   );
 }

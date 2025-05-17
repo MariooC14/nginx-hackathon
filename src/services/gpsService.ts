@@ -14,7 +14,7 @@ interface GeoAPIResponse {
   };
 }
 
-interface LocationData {
+export interface LocationData {
   city: string;
   country: string;
   latitude: number;
@@ -52,24 +52,28 @@ async function saveGeoCache() {
   }
 }
 
-async function IPtoLocation(ip: string): Promise<LocationData> {
+export async function IPtoLocation(...ips: string[]): Promise<LocationData[]> {
   await loadGeoCache();
+  const locations: LocationData[] = [];
 
-  if (geoCache[ip]) {
-    console.log(`Cache hit for IP: ${ip}`);
-    return geoCache[ip];
+  for (const ip of ips) {
+    if (geoCache[ip]) {
+      console.log(`Cache hit for IP: ${ip}`);
+      locations.push(geoCache[ip]);
+      continue;
+    }
+
+    const apiKey = import.meta.env.VITE_GEOAPI_KEY;
+    const response = await fetch(`https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${apiKey}`);
+    const data: GeoAPIResponse = await response.json();
+    const locationData = parseLocationData(data);
+
+    geoCache[ip] = locationData;
+    await saveGeoCache();
+    console.log(`Cache miss for IP: ${ip}, fetched from API`);
+    locations.push(locationData);
   }
-
-  const apiKey = process.env.GEOAPI_KEY;
-  const response = await fetch(`https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${apiKey}`);
-  const data: GeoAPIResponse = await response.json();
-  const locationData = parseLocationData(data);
-
-  geoCache[ip] = locationData;
-  await saveGeoCache();
-  console.log(`Cache miss for IP: ${ip}, fetched from API`);
-
-  return locationData;
+  return locations;
 }
 
 export function parseLocationData(response: GeoAPIResponse): LocationData {
