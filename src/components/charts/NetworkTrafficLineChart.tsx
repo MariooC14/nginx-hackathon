@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import {
   Card,
@@ -253,6 +253,7 @@ useEffect(() => {
                 return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
               }}
             />
+            <YAxis domain={[0, 'auto']} tickLine={false} axisLine={false} />
 
             <ChartTooltip
               cursor={false}
@@ -273,21 +274,21 @@ useEffect(() => {
             />
             <Area
               dataKey="bot"
-              type="natural"
+              type="monotone"
               fill="url(#fillBot)"
               stroke="var(--color-bot)"
               stackId="a"
             />
             <Area
               dataKey="mobile"
-              type="natural"
+              type="monotone"
               fill="url(#fillMobile)"
               stroke="var(--color-mobile)"
               stackId="a"
             />
             <Area
               dataKey="desktop"
-              type="natural"
+              type="monotone"
               fill="url(#fillDesktop)"
               stroke="var(--color-desktop)"
               stackId="a"
