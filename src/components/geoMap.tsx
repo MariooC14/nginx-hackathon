@@ -1,13 +1,14 @@
 import DottedMap from 'dotted-map';
-import type {LocationData} from "@/services/gpsService.ts";
+import type { LocationData } from "@/services/gpsService.ts";
 interface GeoMapProps {
   locations: LocationData[];
+  className?: string;
 }
 
-const GeoMap = ({locations}: GeoMapProps) => {
-  const map = new DottedMap({height: 60, grid: 'diagonal'});
+const GeoMap = ({ locations, className }: GeoMapProps) => {
+  const map = new DottedMap({ height: 60, grid: 'diagonal' });
   for (const location of locations) {
-    const {latitude, longitude} = location;
+    const { latitude, longitude } = location;
     map.addPin({
       lng: longitude,
       lat: latitude,
@@ -23,7 +24,7 @@ const GeoMap = ({locations}: GeoMapProps) => {
   });
 
   return (
-    <div>
+    <div className={className}>
       <img src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`} />
     </div>
   );
