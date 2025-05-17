@@ -18,6 +18,7 @@ class NetworkLogService {
       const lines = text.split("\n").filter(line => line.trim() !== "");
 
       const networkLogs: NetworkLog[] = [];
+      let id = 0;
 
       for (const line of lines) {
         // Regular expression to match NGINX log format
@@ -42,6 +43,7 @@ class NetworkLogService {
           const timestamp = new Date(dateStr.replace(":", " ")).getTime();
 
           networkLogs.push({
+            id: id++,
             ip,
             timestamp,
             request: {
