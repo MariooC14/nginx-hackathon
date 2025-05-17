@@ -96,9 +96,8 @@ export default function StatusPieChart() {
       <CardContent className="flex flex-1 justify-center pb-0">
         <ChartContainer
           config={chartConfig}
-          className="max-h-[300px] flex justify-center items-center"
-        >
-          <div style={{ width: "100%", height: 250 }}>
+          className="flex justify-center items-center">
+          <div style={{ width: "100%", height: "100%" }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <ChartTooltip

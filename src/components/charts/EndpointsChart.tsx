@@ -1,6 +1,8 @@
 import {
   Card,
   CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -9,16 +11,28 @@ import type { ChartConfig } from "@/components/ui/chart"
 import {
   ChartContainer,
   ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart"
 import { getTopPaths } from "@/services/netstats"
 import { useEffect, useState } from "react"
 import { BarChart, Bar, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 import TruncateWithTooltip from "../TruncateWithTooltip"
+import { TrendingUp } from "lucide-react"
 
 type EndpointsData = {
     endpoint: string;
     count: number;
 };
+
+const chartData = [
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
+]
+
 
 const chartConfig = {
   desktop: {
@@ -51,62 +65,42 @@ export function EndpointsChart() {
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
+            accessibilityLayer
             data={data}
             layout="vertical"
-            margin={{ right: 16 }} // left matches YAxis width
+            margin={{
+              right: 16,
+            }}
             width={400}
             height={220}
           >
-            <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+            <CartesianGrid horizontal={false} />
             <YAxis
               dataKey="endpoint"
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              width={180}
-              tick={({ y, payload }) => (
-                <g style={{ zIndex: 10 }}>
-                  <foreignObject x={0} y={y - 12} width={160} height={24}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "left",
-                        height: "24px",
-                        width: "100%",
-                        justifyContent: "flex-start",
-                      }}
-                    >
-                      <span className="font-medium fill-[--color-label]">
-                        <TruncateWithTooltip text={payload.value} width={140} />
-                      </span>
-                    </div>
-                  </foreignObject>
-                </g>
-              )}
+              hide
             />
             <XAxis dataKey="count" type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const { endpoint, count } = payload[0].payload;
-                  return (
-                    <div className="p-2">
-                      <div>{endpoint}</div>
-                      <div>Requests: {count}</div>
-                    </div>
-                  );
-                }
-                return null;
-              }}
+              content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
               dataKey="count"
               layout="vertical"
               fill="var(--color-desktop)"
-              radius={4}
+              radius={7}
             >
+              <LabelList
+                dataKey="endpoint"
+                position="insideLeft"
+                offset={8}
+                className="fill-foreground"
+                fontSize={12}
+              />
               <LabelList
                 dataKey="count"
                 position="right"
