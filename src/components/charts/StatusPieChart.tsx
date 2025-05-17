@@ -1,7 +1,3 @@
-
-
-"use client"
-
 import { useEffect, useState } from "react"
 import { Pie, PieChart, LabelList } from "recharts"
 
