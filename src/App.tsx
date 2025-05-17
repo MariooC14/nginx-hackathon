@@ -12,7 +12,7 @@ function App() {
       setLoading(false);
     }
     init();
-  });
+  }, []);
 
   return (
     <>
