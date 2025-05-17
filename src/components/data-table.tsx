@@ -1,3 +1,4 @@
+// Adapted from Shadcn/ui (https://ui.shadcn.com/docs/components/data-table)
 "use client"
 
 import * as React from "react"
@@ -7,9 +8,9 @@ import {
     type VisibilityState,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
+    getFilteredRowModel,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown } from "lucide-react"
 
@@ -29,6 +30,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { useVirtualizer } from "@tanstack/react-virtual"
 
 const formatDate = (timestamp: number): string => {
     return new Date(timestamp).toLocaleString();
@@ -55,10 +57,10 @@ const columns: ColumnDef<Data>[] = [
         header: ({ table }) => (
             <Checkbox
                 checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
+                    table.getIsAllRowsSelected() ||
+                    (table.getIsSomeRowsSelected() && "indeterminate")
                 }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
                 aria-label="Select all"
             />
         ),
@@ -157,13 +159,15 @@ export function DataTable({ data }: DataTableProps) {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
 
+    const tableContainerRef = React.useRef<HTMLDivElement>(null)
+
     const table = useReactTable({
         data,
         columns,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         state: {
@@ -171,6 +175,15 @@ export function DataTable({ data }: DataTableProps) {
             columnVisibility,
             rowSelection,
         },
+    })
+
+    const { rows } = table.getRowModel()
+
+    const rowVirtualizer = useVirtualizer({
+        count: rows.length,
+        getScrollElement: () => tableContainerRef.current,
+        estimateSize: () => 45, // approximate row height
+        overscan: 10,
     })
 
     return (
@@ -208,7 +221,10 @@ export function DataTable({ data }: DataTableProps) {
                 </DropdownMenu>
             </div>
             <div className="rounded-md border">
-                <div className="w-full max-h-96 overflow-y-auto">
+                <div
+                    ref={tableContainerRef}
+                    className="w-full h-[400px] overflow-auto"
+                >
                     <Table>
                         <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -227,19 +243,28 @@ export function DataTable({ data }: DataTableProps) {
                             ))}
                         </TableHeader>
                         <TableBody>
-                            {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
+                            {rowVirtualizer.getVirtualItems().length > 0 ? (
+                                <>
+                                    {/* Add padding to top to account for virtualized rows */}
+                                    <tr style={{ height: `${rowVirtualizer.getVirtualItems()[0]?.start || 0}px` }} />
+
+                                    {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                                        const row = rows[virtualRow.index]
+                                        return (
+                                            <TableRow
+                                                key={row.id}
+                                                data-state={row.getIsSelected() && "selected"}
+                                                data-index={virtualRow.index}
+                                            >
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        )
+                                    })}
+                                </>
                             ) : (
                                 <TableRow>
                                     <TableCell
@@ -253,24 +278,6 @@ export function DataTable({ data }: DataTableProps) {
                         </TableBody>
                     </Table>
                 </div>
-            </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
             </div>
         </div>
     )
