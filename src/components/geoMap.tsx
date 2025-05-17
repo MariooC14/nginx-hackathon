@@ -1,5 +1,6 @@
 import DottedMap from 'dotted-map';
-import type { LocationData } from "@/services/gpsService.ts";
+import type {LocationData} from "@/services/gpsService.ts";
+
 interface GeoMapProps {
   locations: LocationData[];
   className?: string;
@@ -12,15 +13,15 @@ const GeoMap = ({ locations, className }: GeoMapProps) => {
     map.addPin({
       lng: longitude,
       lat: latitude,
-      svgOptions: { color: '#d6ff79', radius: 0.4 },
+      svgOptions: { color: '#00BC7DFF', radius: 0.3 },
     });
   }
 
   const svgMap = map.getSVG({
     radius: 0.22,
-    color: '#423B38',
+    color: '#27272AFF',
     shape: 'circle',
-    backgroundColor: '#020300',
+    backgroundColor: '#09090BFF',
   });
 
   return (

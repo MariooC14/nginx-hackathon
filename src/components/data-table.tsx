@@ -36,6 +36,7 @@ import { useVirtualizer } from "@tanstack/react-virtual"
 import { networkLogService } from "@/services/NetworkLogService"
 import { formatDate } from "@/lib/utils"
 // import { anomalyService } from "@/services/AnomalyService"
+import TruncateWithTooltip from "@/components/TruncateWithTooltip.tsx";
 
 export type Request = {
   method: string;
@@ -115,8 +116,11 @@ const columns: ColumnDef<Data>[] = [
     ),
   },
   {
+    id: "request.path",
     accessorKey: "request.path",
     header: "Path",
+    cell: ({ row }) => (<TruncateWithTooltip text={row.getValue("request.path")} width={200} />
+    ),
   },
   {
     accessorKey: "request.version",
@@ -149,7 +153,8 @@ const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "userAgent",
     header: "User Agent",
-    cell: ({ row }) => <div className="truncate max-w-xs">{row.getValue("userAgent")}</div>,
+    cell: ({ row }) => (<TruncateWithTooltip text={row.getValue("userAgent")} width={200}/>
+    ),
   },
 ]
 
@@ -160,14 +165,20 @@ export function DataTable() {
   const [data, setData] = React.useState<Data[]>([])
   const [highlightAnomalies, setHighlightAnomalies] = React.useState(true)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [loading, setLoading] = React.useState(true)
 
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setData(networkLogService.getLogs());
-      // const anomalies = await anomalyService.scanForAnomalies();
-      // setData(anomalies);
+      setLoading(true);
+      try {
+        setData(networkLogService.getLogs());
+        // const anomalies = await anomalyService.scanForAnomalies();
+        // setData(anomalies);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData().catch(console.error);
   }, []);
@@ -199,6 +210,19 @@ export function DataTable() {
     overscan: 5,
   })
 
+  const LoadingView = () => (
+    <TableBody>
+      <TableRow>
+        <TableCell colSpan={columns.length} className="h-24">
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <span className="ml-2">Loading...</span>
+          </div>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  );
+
   return (
     <div className="w-full p-4">
       <div className="flex items-center justify-between py-4">
@@ -212,7 +236,7 @@ export function DataTable() {
           <div className="flex items-center space-x-2">
             <label htmlFor="highlight-anomalies" className="text-sm">Show Anomalies</label>
             <Switch onCheckedChange={() => setHighlightAnomalies(!highlightAnomalies)} id="highlight-anomalies"
-              checked={highlightAnomalies} />
+                    checked={highlightAnomalies} />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -234,7 +258,7 @@ export function DataTable() {
                         column.toggleVisibility(value)
                       }
                     >
-                      {column.id}
+                      {column.id.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                     </DropdownMenuCheckboxItem>
                   )
                 })}
@@ -264,40 +288,44 @@ export function DataTable() {
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
-              {rowVirtualizer.getVirtualItems().length > 0 ? (
-                <>
-                  <tr style={{ height: `${rowVirtualizer.getVirtualItems()[0]?.start || 0}px` }} />
+            {loading ? (
+              <LoadingView />
+            ) : (
+              <TableBody>
+                {rowVirtualizer.getVirtualItems().length > 0 ? (
+                  <>
+                    <tr style={{ height: `${rowVirtualizer.getVirtualItems()[0]?.start || 0}px` }} />
 
-                  {rowVirtualizer.getVirtualItems().map(virtualRow => {
-                    const row = rows[virtualRow.index]
-                    return (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                        data-index={virtualRow.index}
-                        className={highlightAnomalies && row.original.isAnomaly ? "bg-orange-300 hover:bg-orange-200" : ""}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    )
-                  })}
-                </>
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
+                    {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                      const row = rows[virtualRow.index]
+                      return (
+                        <TableRow
+                          key={row.id}
+                          data-state={row.getIsSelected() && "selected"}
+                          data-index={virtualRow.index}
+                          className={highlightAnomalies && row.original.isAnomaly ? "bg-orange-300 hover:bg-orange-200" : ""}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      )
+                    })}
+                  </>
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            )}
           </Table>
         </div>
       </div>
