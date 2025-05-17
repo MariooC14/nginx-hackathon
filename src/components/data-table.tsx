@@ -153,7 +153,7 @@ const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "userAgent",
     header: "User Agent",
-    cell: ({ row }) => (<TruncateWithTooltip text={row.getValue("userAgent")} width={200}/>
+    cell: ({ row }) => (<TruncateWithTooltip text={row.getValue("userAgent")} width={200} />
     ),
   },
 ]
@@ -207,7 +207,7 @@ export function DataTable() {
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 45,
-    overscan: 5,
+    overscan: 10,
   })
 
   const LoadingView = () => (
@@ -236,7 +236,7 @@ export function DataTable() {
           <div className="flex items-center space-x-2">
             <label htmlFor="highlight-anomalies" className="text-sm">Show Anomalies</label>
             <Switch onCheckedChange={() => setHighlightAnomalies(!highlightAnomalies)} id="highlight-anomalies"
-                    checked={highlightAnomalies} />
+              checked={highlightAnomalies} />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
