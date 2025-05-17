@@ -36,6 +36,7 @@ import { useVirtualizer } from "@tanstack/react-virtual"
 import { networkLogService } from "@/services/NetworkLogService"
 import { formatDate } from "@/lib/utils"
 // import { anomalyService } from "@/services/AnomalyService"
+import TruncateWithTooltip from "@/components/TruncateWithTooltip.tsx";
 
 export type Request = {
   method: string;
@@ -115,8 +116,11 @@ const columns: ColumnDef<Data>[] = [
     ),
   },
   {
+    id: "request.path",
     accessorKey: "request.path",
     header: "Path",
+    cell: ({ row }) => (<TruncateWithTooltip text={row.getValue("request.path")} width={200} />
+    ),
   },
   {
     accessorKey: "request.version",
@@ -149,7 +153,8 @@ const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "userAgent",
     header: "User Agent",
-    cell: ({ row }) => <div className="truncate max-w-xs">{row.getValue("userAgent")}</div>,
+    cell: ({ row }) => (<TruncateWithTooltip text={row.getValue("userAgent")} width={200}/>
+    ),
   },
 ]
 
