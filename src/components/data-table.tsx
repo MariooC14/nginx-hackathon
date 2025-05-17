@@ -30,7 +30,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {useVirtualizer} from "@tanstack/react-virtual"
-import {NetworkLogService} from "@/services/networkLogService"
+import {NetworkLogService} from "@/services/NetworkLogService"
 
 const formatDate = (timestamp: number): string => {
     return new Date(timestamp).toLocaleString();

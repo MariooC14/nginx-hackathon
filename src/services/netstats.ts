@@ -1,4 +1,4 @@
-import {NetworkLogService} from '../services/networkLogService';
+import {NetworkLogService} from '../services/NetworkLogService';
 
 export type LogEntry = {
     ip: string;
