@@ -38,6 +38,7 @@ export async function parseNetworkLogs(): Promise<NetworkLog[]> {
           status: parseInt(status),
           size: parseInt(size),
           userAgent,
+          isAnomaly: false,
         });
       }
     }

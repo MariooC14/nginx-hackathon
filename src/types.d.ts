@@ -9,4 +9,6 @@ export type NetworkLog = {
   status: number;
   size: number;
   userAgent: string;
+  isAnomaly: boolean;
+  note?: string;
 };
