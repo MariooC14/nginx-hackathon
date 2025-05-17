@@ -22,11 +22,6 @@ export default function AnomaliesPage() {
       .then(newLocations => setLocations(newLocations));
   }, []);
 
-  useEffect(() => {
-    IPtoLocation("43.130.40.120", "185.198.228.124")
-      .then(newLocations => setLocations(newLocations));
-  }, []);
-
   return (
     <>
       <TypographyH1 className="inline">Anomalies</TypographyH1>
