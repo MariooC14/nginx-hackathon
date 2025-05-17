@@ -1,24 +1,32 @@
+import { useEffect, useState } from "react";
 import Layout from "./components/layout";
-import { useNetworkLogs } from "./NetworkLogsProvider";
-import { useEffect } from "react";
-import { getUniqueVisitors, getTopPaths, getTotalRequests, getTotalSize } from "./services/netstats";
 import { Outlet } from "react-router";
+import { networkLogService } from "./services/NetworkLogService";
 
 function App() {
-  const logs = useNetworkLogs();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Network logs:", logs);
-    console.log("Unique visitors", getUniqueVisitors());
-    console.log("Total size ", getTotalSize());
-    console.log("Total requests ", getTotalRequests());
-    console.log("Top paths ", getTopPaths());
-  }, [logs]);
+    async function init() {
+      await networkLogService.init();
+      setLoading(false);
+    }
+    init();
+  });
 
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <>
+      {loading ? (
+        <div className="w-screen h-screen flex justify-center items-center bg-accent">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <span className="ml-2">Loading...</span>
+        </div>
+      ) : (
+        <Layout>
+          <Outlet />
+        </Layout>
+      )}
+    </>
   );
 }
 

@@ -1,17 +1,11 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import type { NetworkLog } from "./types";
-import { parseNetworkLogs } from "./lib/utils";
+import { networkLogService } from "./services/NetworkLogService";
 
 const NetworkLogsContext = createContext<NetworkLog[]>([]);
 
 export default function NetworkLogsProvider({ children }: { children: ReactNode }) {
-  const [networkLogs, setNetworkLogs] = useState<NetworkLog[]>([]);
-
-  useEffect(() => {
-    parseNetworkLogs().then((logs) => {
-      setNetworkLogs(logs);
-    });
-  }, []);
+  const networkLogs: NetworkLog[] = networkLogService.getLogs();
 
   return (
     <NetworkLogsContext.Provider value={networkLogs}>
