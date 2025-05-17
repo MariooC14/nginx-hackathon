@@ -2,15 +2,22 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { BrowserRouter } from 'react-router'
+import { BrowserRouter, Route, Routes } from 'react-router'
 import NetworkLogsProvider from './NetworkLogsProvider.tsx'
+import DashboardPage from './pages/DashboardPage.tsx'
+import LogsPage from './pages/LogsPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <NetworkLogsProvider>
-        <App />
-      </NetworkLogsProvider>
-    </BrowserRouter>
+    <NetworkLogsProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="logs" element={<LogsPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </NetworkLogsProvider>
   </StrictMode>,
 )
