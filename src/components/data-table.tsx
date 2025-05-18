@@ -37,6 +37,7 @@ import { networkLogService } from "@/services/NetworkLogService"
 import { formatDate } from "@/lib/utils"
 // import { anomalyService } from "@/services/AnomalyService"
 import TruncateWithTooltip from "@/components/TruncateWithTooltip.tsx";
+import { anomalyService } from "@/services/AnomalyService"
 
 export type Request = {
   method: string;
@@ -51,8 +52,7 @@ export type Data = {
   status: number;
   size: number;
   userAgent: string;
-  isAnomaly: boolean;
-  note?: string;
+  isAnomaly?: boolean;
 };
 
 const columns: ColumnDef<Data>[] = [
@@ -162,7 +162,7 @@ export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-  const [data, setData] = React.useState<Data[]>([])
+  const [data, setData] = React.useState<Data[]>(networkLogService.getLogs())
   const [highlightAnomalies, setHighlightAnomalies] = React.useState(true)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [loading, setLoading] = React.useState(true)
@@ -173,9 +173,8 @@ export function DataTable() {
     const fetchData = async () => {
       setLoading(true);
       try {
+        anomalyService.scanForAnomalies();
         setData(networkLogService.getLogs());
-        // const anomalies = await anomalyService.scanForAnomalies();
-        // setData(anomalies);
       } finally {
         setLoading(false);
       }
@@ -303,7 +302,7 @@ export function DataTable() {
                           key={row.id}
                           data-state={row.getIsSelected() && "selected"}
                           data-index={virtualRow.index}
-                          className={highlightAnomalies && row.original.isAnomaly ? "bg-orange-300 hover:bg-orange-200" : ""}
+                          className={highlightAnomalies && row.original.isAnomaly ? "bg-orange-500 hover:bg-orange-400" : ""}
                         >
                           {row.getVisibleCells().map((cell) => (
                             <TableCell key={cell.id}>
