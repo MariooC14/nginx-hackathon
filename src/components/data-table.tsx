@@ -262,10 +262,9 @@ export function DataTable() {
                       key={column.id}
                       className="capitalize"
                       checked={column.getIsVisible()}
-                      onSelect={(event) => {
-                        event.preventDefault();
-                        column.toggleVisibility(!column.getIsVisible());
-                      }}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(value)
+                      }
                     >
                       {column.id.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                     </DropdownMenuCheckboxItem>
