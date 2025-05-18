@@ -17,7 +17,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div data-vaul-drawer-wrapper>
       {loading ? (
         <div className="w-screen h-screen flex justify-center items-center bg-accent">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -28,7 +28,7 @@ function App() {
           <Outlet />
         </Layout>
       )}
-    </>
+    </div>
   );
 }
 
