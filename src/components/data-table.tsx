@@ -233,7 +233,7 @@ export function DataTable() {
         />
         <div className="flex gap-2">
           <div className="flex items-center space-x-2">
-            <label htmlFor="highlight-anomalies" className="text-sm">Show Anomalies</label>
+            <label htmlFor="highlight-anomalies" className="text-sm">Mark Anomalies</label>
             <Switch onCheckedChange={() => setHighlightAnomalies(!highlightAnomalies)} id="highlight-anomalies"
               checked={highlightAnomalies} />
           </div>
