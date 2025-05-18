@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Pie, PieChart, LabelList, ResponsiveContainer } from "recharts"
+import { Pie, PieChart, LabelList} from "recharts"
 
 import {
   Card,
@@ -97,8 +97,8 @@ export default function StatusPieChart() {
         <ChartContainer
           config={chartConfig}
           className="flex justify-center items-center">
-          <div style={{ width: "100%", height: "100%" }}>
-            <ResponsiveContainer width="100%" height="100%">
+          {/* <div style={{ width: "100%", height: "100%" }}> */}
+            {/* <ResponsiveContainer width="100%" height="100%"> */}
               <PieChart>
                 <ChartTooltip
                   content={<ChartTooltipContent nameKey="status" hideLabel />}
@@ -107,8 +107,8 @@ export default function StatusPieChart() {
                   data={chartData}
                   dataKey="value"
                   nameKey="status"
-                  innerRadius={30}
-                  strokeWidth={5}
+                  innerRadius={40}
+                  strokeWidth={1}
                   labelLine={false}
                 >
                   <LabelList
@@ -125,11 +125,11 @@ export default function StatusPieChart() {
                   layout="vertical"
                   align="right"
                   verticalAlign="middle"
-                  className="flex flex-col gap-2 w-[80px] ml-2"
+                  className="flex flex-col gap-2 mr-12"
                 />
               </PieChart>
-            </ResponsiveContainer>
-          </div>
+            {/* </ResponsiveContainer> */}
+          {/* </div> */}
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
