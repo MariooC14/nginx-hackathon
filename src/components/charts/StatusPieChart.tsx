@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Pie, PieChart, LabelList} from "recharts"
+import { Pie, PieChart, LabelList, Cell} from "recharts"
 
 import {
   Card,
@@ -28,25 +28,11 @@ type StatusPieData = {
 };
 
 const chartConfig = {
-  value: {
-    label: "Requests",
-  },
-  "2xx": {
-    label: "Success",
-    color: "#10B981", // Green (Tailwind emerald-500)
-  },
-  "3xx": {
-    label: "Redirection",
-    color: "#F97316", // Orange (Tailwind orange-500)
-  },
-  "4xx": {
-    label: "Client Error",
-    color: "#EF4444", // Red (Tailwind red-500)
-  },
-  "5xx": {
-    label: "Server Error",
-    color: "#000000", // Black
-  },
+  value: { label: "Requests" },
+  "2xx": { label: "Success", color: "url(#pie-2xx)" },
+  "3xx": { label: "Redirection", color: "url(#pie-3xx)" },
+  "4xx": { label: "Client Error", color: "url(#pie-4xx)" },
+  "5xx": { label: "Server Error", color: "url(#pie-5xx)" },
 } satisfies ChartConfig;
 
 
@@ -94,42 +80,58 @@ export default function StatusPieChart() {
         <CardDescription>January - June 2025</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 justify-center pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="flex justify-center items-center">
-          {/* <div style={{ width: "100%", height: "100%" }}> */}
-            {/* <ResponsiveContainer width="100%" height="100%"> */}
-              <PieChart>
-                <ChartTooltip
-                  content={<ChartTooltipContent nameKey="status" hideLabel />}
-                />
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="status"
-                  innerRadius={40}
-                  strokeWidth={1}
-                  labelLine={false}
-                >
-                  <LabelList
-                    dataKey="percent"
-                    position="inside"
-                    className="fill-background"
-                    stroke="none"
-                    fontSize={12}
-                    formatter={(value: number) => `${value.toFixed(1)}%`}
-                  />
-                </Pie>
-                <ChartLegend
-                  content={<ChartLegendContent nameKey="status" />}
-                  layout="vertical"
-                  align="right"
-                  verticalAlign="middle"
-                  className="flex flex-col gap-2 mr-12"
-                />
-              </PieChart>
-            {/* </ResponsiveContainer> */}
-          {/* </div> */}
+        <ChartContainer config={chartConfig} className="flex justify-center items-center">
+          <PieChart>
+            {/* --- Gradients --- */}
+            <defs>
+              <linearGradient id="pie-2xx" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#34d399" />
+                <stop offset="100%" stopColor="#10b981" />
+              </linearGradient>
+              <linearGradient id="pie-3xx" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#fdba74" />
+                <stop offset="100%" stopColor="#f97316" />
+              </linearGradient>
+              <linearGradient id="pie-4xx" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#fca5a5" />
+                <stop offset="100%" stopColor="#ef4444" />
+              </linearGradient>
+              <linearGradient id="pie-5xx" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#a1a1aa" />
+                <stop offset="100%" stopColor="#000000" />
+              </linearGradient>
+            </defs>
+            <ChartTooltip content={<ChartTooltipContent nameKey="status" hideLabel />} />
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="status"
+              innerRadius={40}
+              strokeWidth={1}
+              labelLine={false}
+              isAnimationActive={true}
+              fill="#8884d8"
+            >
+              {chartData.map((entry, idx) => (
+                <Cell key={`cell-${idx}`} fill={chartConfig[entry.status as "2xx" | "3xx" | "4xx" | "5xx"].color} />
+              ))}
+              <LabelList
+                dataKey="percent"
+                position="inside"
+                className="fill-background"
+                stroke="none"
+                fontSize={12}
+                formatter={(value: number) => `${value.toFixed(1)}%`}
+              />
+            </Pie>
+            <ChartLegend
+              content={<ChartLegendContent nameKey="status" />}
+              layout="vertical"
+              align="right"
+              verticalAlign="middle"
+              className="flex flex-col gap-2 mr-12"
+            />
+          </PieChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
