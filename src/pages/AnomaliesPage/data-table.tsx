@@ -20,6 +20,8 @@ import { DrawerTrigger } from "@/components/ui/drawer"
 import type { Anomaly } from "@/services/AnomalyService"
 import { Eye } from "lucide-react"
 import type { Dispatch, SetStateAction } from "react"
+import { TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip"
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -96,11 +98,18 @@ export function AnomaliesDataTable<TData, TValue>({
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {cell.column.id === "actions" ? (
-                            <DrawerTrigger asChild>
-                              <Button variant="ghost" size="icon" onClick={() => onSelect(row.original as Anomaly)}>
-                                <Eye />
-                              </Button>
-                            </DrawerTrigger>
+                            <TooltipProvider>
+                              <Tooltip delayDuration={250}>
+                                <TooltipTrigger asChild>
+                                  <DrawerTrigger asChild>
+                                    <Button variant="ghost" size="icon" onClick={() => onSelect(row.original as Anomaly)}>
+                                      <Eye />
+                                    </Button>
+                                  </DrawerTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>View details</TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           ) : (
                             flexRender(cell.column.columnDef.cell, cell.getContext())
                           )}
