@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "./components/layout";
 import { Outlet } from "react-router";
 import { networkLogService } from "./services/NetworkLogService";
+import { anomalyService } from "./services/AnomalyService";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -9,6 +10,7 @@ function App() {
   useEffect(() => {
     async function init() {
       await networkLogService.init();
+      anomalyService.scanForAnomalies();
       setLoading(false);
     }
     init();
