@@ -91,15 +91,15 @@ export function EndpointsChart() {
             <Bar
               dataKey="count"
               layout="vertical"
-              fill="var(--color-desktop)"
+              fill="#10B981"
               radius={7}
             >
               <LabelList
                 dataKey="endpoint"
                 position="insideLeft"
                 offset={8}
-                className="fill-foreground"
-                fontSize={12}
+                className="fill-background"
+                fontSize={14}
               />
               <LabelList
                 dataKey="count"
