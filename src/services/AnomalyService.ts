@@ -95,6 +95,7 @@ export class AnomalyService {
       "masscan",
       "slowhttptest",
       "bytespider",
+      "petalbot",
     ];
 
     const suspiciousAgentLogs = logs.filter(log => {
