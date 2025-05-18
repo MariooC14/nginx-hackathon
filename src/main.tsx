@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
@@ -8,15 +7,13 @@ import LogsPage from './pages/LogsPage.tsx'
 import AnomaliesPage from './pages/AnomaliesPage/page.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="anomalies" element={<AnomaliesPage />} />
-          <Route path="logs" element={<LogsPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="anomalies" element={<AnomaliesPage />} />
+        <Route path="logs" element={<LogsPage />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
 )

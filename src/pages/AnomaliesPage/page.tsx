@@ -9,7 +9,6 @@ import AnomalyDetailsView from "./AnomalyDetailsDialog";
 export default function AnomaliesPage() {
   const [anomalyLogs, setAnomalyLogs] = useState<Anomaly[]>([]);
   const [selectedAnomaly, setSelectedAnomaly] = useState<Anomaly | null>(null);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,10 +17,14 @@ export default function AnomaliesPage() {
     setLoading(false);
   }, []);
 
+  function handleDrawerClose() {
+    setSelectedAnomaly(null);
+  }
+
   return (
     <>
       <TypographyH1 className="inline text-primary">Anomalies</TypographyH1>
-      <Drawer>
+      <Drawer shouldScaleBackground onClose={handleDrawerClose}>
         <AnomalyDetailsView anomaly={selectedAnomaly} />
         <AnomaliesDataTable columns={anomaliesColumns} data={anomalyLogs} loading={loading} onSelect={setSelectedAnomaly} />
       </Drawer>

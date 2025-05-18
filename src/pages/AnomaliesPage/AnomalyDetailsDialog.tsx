@@ -34,28 +34,28 @@ export default function AnomalyDetailsView({ anomaly }: { anomaly: Anomaly | nul
   }
 
   return (
-    <DrawerContent>
-      <DrawerHeader>
-        <div className="flex w-full justify-between">
-          <div>
-            <DrawerTitle>Anomaly Details</DrawerTitle>
-            <DrawerDescription>
-              <strong>Reason:</strong> {anomaly.reason}<br />
-              <strong>Note:</strong> {anomaly.note}<br /><br />
-              <strong>Related Logs:</strong><br />
-            </DrawerDescription>
-          </div>
-          <DrawerClose asChild><Button>Close</Button></DrawerClose>
-        </div>
-      </DrawerHeader>
-      <ScrollArea className="h-[750px] rounded mb-6">
+    <DrawerContent className="flex flex-col rounded-t-[10px]">
+      <div className="flex-1 overflow-y-auto">
+        <DrawerHeader>
+          <div className="flex justify-between">
+            <div>
+              <DrawerTitle>Anomaly Details</DrawerTitle>
+              <DrawerDescription>
+                <strong>Reason:</strong> {anomaly.reason}<br />
+                <strong>Note:</strong> {anomaly.note}<br /><br />
+                <strong>Related Logs:</strong><br />
+              </DrawerDescription>
+            </div>
+            <DrawerClose asChild><Button>Close</Button></DrawerClose>
+          </div >
+        </DrawerHeader >
         <AnomalyRelatedLogsTable logs={anomaly.relatedLogs} />
         <div className="flex justify-between m-4 gap-2">
           <AIAnomalySuggestion anomaly={anomaly} />
           <GeoMap locations={locations} className="rounded flex-1" />
         </div>
-      </ScrollArea>
-    </DrawerContent>
+      </div>
+    </DrawerContent >
   )
 };
 
