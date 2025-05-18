@@ -1,6 +1,7 @@
 import type { NetworkLog } from "@/types";
 import { networkLogService } from "./NetworkLogService";
 import { filterLogsByTime, type TimeFilter } from "./netstats";
+import OpenAI from "openai";
 
 export interface Anomaly {
   id: string;
@@ -8,6 +9,11 @@ export interface Anomaly {
   note: string;
   relatedLogs: NetworkLog[];
 }
+
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY || "",
+  dangerouslyAllowBrowser: true,
+});
 
 export class AnomalyService {
   private anomaliesCache: Anomaly[] = [];
@@ -197,6 +203,64 @@ export class AnomalyService {
     const base2 = path2.replace(/\d+/g, "X");
 
     return base1 === base2 && Math.abs(num2 - num1) <= 2;
+  }
+
+  async generateAnomalyAnalysis(anomaly: Anomaly) {
+    try {
+      const anomalyData = {
+        reason: anomaly.reason,
+        note: anomaly.note,
+        ipAddresses: [
+          ...new Set(anomaly.relatedLogs.map((log: NetworkLog) => log.ip)),
+        ],
+        statusCodes: [
+          ...new Set(anomaly.relatedLogs.map((log: NetworkLog) => log.status)),
+        ],
+        paths: [
+          ...new Set(
+            anomaly.relatedLogs.map((log: NetworkLog) => log.request.path)
+          ),
+        ].slice(0, 5),
+        userAgents: [
+          ...new Set(
+            anomaly.relatedLogs.map((log: NetworkLog) => log.userAgent)
+          ),
+        ].slice(0, 3),
+        logsCount: anomaly.relatedLogs.length,
+      };
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a cybersecurity expert analyzing NGINX logs for security anomalies. Provide concise analysis and actionable recommendations based on the detected anomaly. Keep your response under 150 words.",
+          },
+          {
+            role: "user",
+            content: `Analyze this NGINX log anomaly and provide expert recommendations:
+            
+            Anomaly type: ${anomalyData.reason}
+            Details: ${anomalyData.note}
+            IP addresses involved: ${anomalyData.ipAddresses.join(", ")}
+            Status codes: ${anomalyData.statusCodes.join(", ")}
+            Sample paths: ${anomalyData.paths.join(", ")}
+            User agents: ${anomalyData.userAgents.join(", ")}
+            Number of related logs: ${anomalyData.logsCount}`,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 250,
+      });
+
+      return (
+        response.choices[0].message.content || "Unable to generate analysis."
+      );
+    } catch (error) {
+      console.error("Error generating OpenAI analysis:", error);
+      return "Error generating AI analysis. Please try again later.";
+    }
   }
 
   getAnomalies() {

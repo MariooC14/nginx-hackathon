@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDate } from "@/lib/utils";
-import type { Anomaly } from "@/services/AnomalyService";
+import { anomalyService, type Anomaly } from "@/services/AnomalyService";
+import Markdown from 'react-markdown'
 import {
   DrawerClose,
   DrawerContent,
@@ -13,6 +14,8 @@ import TruncateWithTooltip from "@/components/TruncateWithTooltip";
 import { useEffect, useState } from "react";
 import { IPtoLocation, type LocationData } from "@/services/gpsService";
 import GeoMap from "@/components/geoMap";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Brain, LoaderPinwheel } from "lucide-react";
 
 export default function AnomalyDetailsView({ anomaly }: { anomaly: Anomaly | null }) {
   const [locations, setLocations] = useState<LocationData[]>([]);
@@ -47,15 +50,57 @@ export default function AnomalyDetailsView({ anomaly }: { anomaly: Anomaly | nul
       </DrawerHeader>
       <ScrollArea className="h-[750px] rounded mb-6">
         <AnomalyRelatedLogsTable logs={anomaly.relatedLogs} />
-        <GeoMap locations={locations} className="rounded w-3/5 m-auto" />
+        <div className="flex justify-between m-4 gap-2">
+          <AIAnomalySuggestion anomaly={anomaly} />
+          <GeoMap locations={locations} className="rounded flex-1" />
+        </div>
       </ScrollArea>
     </DrawerContent>
   )
 };
 
+function AIAnomalySuggestion({ anomaly }: { anomaly: Anomaly }) {
+  const [suggestion, setSuggestion] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setSuggestion(null);
+
+    async function getAIAnalysis() {
+      try {
+        const analysis = await anomalyService.generateAnomalyAnalysis(anomaly);
+        setSuggestion(analysis);
+      } catch (error) {
+        console.error("Error getting AI analysis:", error);
+        setSuggestion("Failed to generate AI analysis. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    getAIAnalysis();
+  }, [anomaly]);
+
+  return (
+    <Card className="flex-1 select-text">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2"><Brain />AI Anomaly Suggestion</CardTitle>
+      </CardHeader>
+      <CardContent className="font-mono text-primary">
+        {loading ? <div className="flex items-center gap-2">
+          <LoaderPinwheel className="animate-spin" />
+          Loading suggestion...
+        </div>
+          : <Markdown>{suggestion || "No suggestion available."}</Markdown>
+        }
+      </CardContent>
+    </Card>
+  )
+}
+
 function AnomalyRelatedLogsTable({ logs }: { logs: Anomaly['relatedLogs'] }) {
   return (
-    <ScrollArea className="h-[400px] rounded-md border mb-6 mx-4 max-w-full">
+    <ScrollArea className="h-[350px] rounded-md border mb-6 mx-4 max-w-full">
       <table className="w-full overflow-x-scroll">
         <thead className="sticky top-0 bg-background">
           <tr className="border-b">
