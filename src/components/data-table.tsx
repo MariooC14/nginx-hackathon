@@ -137,6 +137,15 @@ const columns: ColumnDef<Data>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      const status = row.getValue("status") as number;
+
+      return (
+        <span className={getColorForStatus(status)}>
+          {status}
+        </span>
+      )
+    }
   },
   {
     accessorKey: "size",
@@ -302,7 +311,7 @@ export function DataTable() {
                           key={row.id}
                           data-state={row.getIsSelected() && "selected"}
                           data-index={virtualRow.index}
-                          className={highlightAnomalies && row.original.isAnomaly ? "bg-orange-500 hover:bg-orange-400" : ""}
+                          className={highlightAnomalies && row.original.isAnomaly ? "bg-red-900 hover:bg-red-500" : ""}
                         >
                           {row.getVisibleCells().map((cell) => (
                             <TableCell key={cell.id}>
@@ -334,6 +343,16 @@ export function DataTable() {
       </div>
     </div>
   )
+}
+
+function getColorForStatus(status: number) {
+  if (status >= 400) {
+    return "text-red-500";
+  } else if (status >= 300) {
+    return "text-yellow-500";
+  } else {
+    return "text-green-500";
+  }
 }
 
 export default DataTable;
