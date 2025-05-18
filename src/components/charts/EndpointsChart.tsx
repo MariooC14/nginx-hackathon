@@ -32,7 +32,7 @@ export function EndpointsChart() {
         setData(topPaths);
     }, []);
   return (
-    <Card className="@container/card w-full h-full">
+    <Card className="@container/card w-full h-full gap-0">
       <CardHeader>
         <CardTitle>Top requested endpoints</CardTitle>
       </CardHeader>
@@ -42,7 +42,7 @@ export function EndpointsChart() {
             accessibilityLayer
             data={data}
             layout="vertical"
-            margin={{ right: 8, top: 8, bottom: 8 }}
+            margin={{ left: 16, right: 8, bottom: 8 }}
             width={260}
             height={120}
           >
@@ -60,22 +60,22 @@ export function EndpointsChart() {
             <Bar
               dataKey="count"
               layout="vertical"
-              fill="url(#bar-gradient)" // 👈 Use the gradient here
+              fill="url(#bar-gradient)"
               radius={5}
             >
               <LabelList
-                dataKey="endpoint"
-                position="insideLeft"
-                offset={8}
-                className="fill-background"
-                fontSize={14}
+              dataKey="endpoint"
+              position="insideLeft"
+              offset={8}
+              className="fill-background font-bold"
+              fontSize={14}
               />
               <LabelList
-                dataKey="count"
-                position="right"
-                offset={8}
-                className="fill-foreground"
-                fontSize={12}
+              dataKey="count"
+              position="right"
+              offset={8}
+              className="fill-foreground font-bold"
+              fontSize={12}
               />
             </Bar>
           </BarChart>
