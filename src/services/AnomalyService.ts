@@ -13,6 +13,11 @@ export class AnomalyService {
   private anomaliesCache: Anomaly[] = [];
 
   scanForAnomalies(timeFilter: TimeFilter = "all") {
+    // Check if anomalies have already been scanned
+    if (this.anomaliesCache.length > 0) {
+      return this.anomaliesCache;
+    }
+
     const logs: NetworkLog[] = networkLogService.getLogs();
     const anomalies: Anomaly[] = [];
     const filteredLogs = filterLogsByTime(logs, timeFilter);
@@ -63,6 +68,7 @@ export class AnomalyService {
     });
 
     this.anomaliesCache = anomalies;
+    this.markAsAnomaly(...anomalies.flatMap(anomaly => anomaly.relatedLogs));
     return anomalies;
   }
   /**
@@ -196,6 +202,13 @@ export class AnomalyService {
 
   getAnomalyById(id: string) {
     return this.anomaliesCache.find(anomaly => anomaly.id === id);
+  }
+
+  // Mark logs as anomalies - to be used by the logs table
+  private markAsAnomaly(...logs: NetworkLog[]) {
+    for (const log of logs) {
+      log.isAnomaly = true;
+    }
   }
 }
 

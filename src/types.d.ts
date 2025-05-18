@@ -12,4 +12,5 @@ export type NetworkLog = {
   userAgent: string;
   isAnomaly: boolean;
   note?: string;
+  isAnomaly?: boolean;
 };
