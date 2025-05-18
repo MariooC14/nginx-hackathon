@@ -29,10 +29,10 @@ type StatusPieData = {
 
 const chartConfig = {
   value: { label: "Requests" },
-  "2xx": { label: "Success", color: "url(#pie-2xx)" },
-  "3xx": { label: "Redirection", color: "url(#pie-3xx)" },
-  "4xx": { label: "Client Error", color: "url(#pie-4xx)" },
-  "5xx": { label: "Server Error", color: "url(#pie-5xx)" },
+  "2xx": { label: "Success", color: "#10b981" },
+  "3xx": { label: "Redirection", color: "#f97316" },
+  "4xx": { label: "Client Error", color: "#ef4444" },
+  "5xx": { label: "Server Error", color: "#000000" },
 } satisfies ChartConfig;
 
 
@@ -101,6 +101,7 @@ export default function StatusPieChart() {
                 <stop offset="100%" stopColor="#000000" />
               </linearGradient>
             </defs>
+            {/* --- Pie --- */}
             <ChartTooltip content={<ChartTooltipContent nameKey="status" hideLabel />} />
             <Pie
               data={chartData}

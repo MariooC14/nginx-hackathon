@@ -9,7 +9,6 @@ export default function NetworkChartsView() {
   return (
     <div className="m-8">
       <div className="grid grid-cols-2 gap-4">
-
         <div  className="grid grid-rows-2 w-full gap-4 grid-cols-3">
           <SectionCards />
           <div className="flex col-span-3">
