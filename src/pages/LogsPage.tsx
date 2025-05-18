@@ -5,7 +5,7 @@ export default function LogsPage() {
 
   return (
     <>
-      <TypographyH1 className="inline">Logs</TypographyH1>
+      <TypographyH1 className="inline text-primary">Logs</TypographyH1>
       <div>
           <DataTable/>
       </div>
