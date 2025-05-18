@@ -26,7 +26,7 @@ const GeoMap = ({ locations, className }: GeoMapProps) => {
 
   return (
     <div className={className}>
-      <img src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`} />
+      <img src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}  alt={"Geo location map"}/>
     </div>
   );
 };
