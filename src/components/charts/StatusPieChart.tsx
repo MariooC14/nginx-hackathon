@@ -81,24 +81,24 @@ export default function StatusPieChart() {
       </CardHeader>
       <CardContent className="flex flex-1 justify-center pb-0">
         <ChartContainer config={chartConfig} className="flex justify-center items-center">
-          <PieChart>
+            <PieChart>
             {/* --- Gradients --- */}
             <defs>
               <linearGradient id="pie-2xx" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#34d399" />
-                <stop offset="100%" stopColor="#10b981" />
+              <stop offset="0%" stopColor="#34d399" />
+              <stop offset="100%" stopColor="#10b981" />
               </linearGradient>
               <linearGradient id="pie-3xx" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#fdba74" />
-                <stop offset="100%" stopColor="#f97316" />
+              <stop offset="0%" stopColor="#fdba74" />
+              <stop offset="100%" stopColor="#f97316" />
               </linearGradient>
               <linearGradient id="pie-4xx" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#fca5a5" />
-                <stop offset="100%" stopColor="#ef4444" />
+              <stop offset="0%" stopColor="#fca5a5" />
+              <stop offset="100%" stopColor="#ef4444" />
               </linearGradient>
               <linearGradient id="pie-5xx" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#a1a1aa" />
-                <stop offset="100%" stopColor="#000000" />
+              <stop offset="0%" stopColor="#a1a1aa" />
+              <stop offset="100%" stopColor="#000000" />
               </linearGradient>
             </defs>
             {/* --- Pie --- */}
@@ -114,15 +114,15 @@ export default function StatusPieChart() {
               fill="#8884d8"
             >
               {chartData.map((entry, idx) => (
-                <Cell key={`cell-${idx}`} fill={chartConfig[entry.status as "2xx" | "3xx" | "4xx" | "5xx"].color} />
+              <Cell key={`cell-${idx}`} fill={chartConfig[entry.status as "2xx" | "3xx" | "4xx" | "5xx"].color} />
               ))}
               <LabelList
-                dataKey="percent"
-                position="inside"
-                className="fill-background"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: number) => `${value.toFixed(1)}%`}
+              dataKey="percent"
+              position="inside"
+              className="fill-background text-muted-foreground font-semibold"
+              stroke="none"
+              fontSize={15}
+              formatter={(value: number) => `${value.toFixed(1)}%`}
               />
             </Pie>
             <ChartLegend
@@ -130,9 +130,9 @@ export default function StatusPieChart() {
               layout="vertical"
               align="right"
               verticalAlign="middle"
-              className="flex flex-col gap-2 mr-12"
+              className="flex flex-col gap-3 mr-25 text-xl text-muted-foreground"
             />
-          </PieChart>
+            </PieChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
