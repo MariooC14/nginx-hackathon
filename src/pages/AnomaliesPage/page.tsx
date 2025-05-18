@@ -20,7 +20,7 @@ export default function AnomaliesPage() {
 
   return (
     <>
-      <TypographyH1 className="inline">Anomalies</TypographyH1>
+      <TypographyH1 className="inline text-primary">Anomalies</TypographyH1>
       <Drawer>
         <AnomalyDetailsView anomaly={selectedAnomaly} />
         <AnomaliesDataTable columns={anomaliesColumns} data={anomalyLogs} loading={loading} onSelect={setSelectedAnomaly} />
