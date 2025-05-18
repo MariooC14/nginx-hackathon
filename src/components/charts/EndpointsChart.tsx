@@ -1,8 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -16,37 +14,13 @@ import {
 import { getTopPaths } from "@/services/netstats"
 import { useEffect, useState } from "react"
 import { BarChart, Bar, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
-import TruncateWithTooltip from "../TruncateWithTooltip"
-import { TrendingUp } from "lucide-react"
 
 type EndpointsData = {
     endpoint: string;
     count: number;
 };
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
-
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-  label: {
-    color: "hsl(var(--background))",
-  },
-} satisfies ChartConfig
+const chartConfig = {} satisfies ChartConfig
 
 export function EndpointsChart() {
     const [data, setData] = useState<EndpointsData[]>([]);
@@ -62,37 +36,32 @@ export function EndpointsChart() {
       <CardHeader>
         <CardTitle>Top requested endpoints</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-2">
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={data}
             layout="vertical"
-            margin={{
-              right: 16,
-            }}
-            width={400}
-            height={220}
+            margin={{ right: 8, top: 8, bottom: 8 }}
+            width={260}
+            height={120}
           >
+            {/* --- Gradient --- */}
+            <defs>
+              <linearGradient id="bar-gradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#10b981" />
+                <stop offset="100%" stopColor="#34d399" />
+              </linearGradient>
+            </defs>
             <CartesianGrid horizontal={false} />
-            <YAxis
-              dataKey="endpoint"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              hide
-            />
+            <YAxis dataKey="endpoint" type="category" tickLine={false} tickMargin={6} axisLine={false} hide />
             <XAxis dataKey="count" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
             <Bar
               dataKey="count"
               layout="vertical"
-              fill="#10B981"
-              radius={7}
+              fill="url(#bar-gradient)" // 👈 Use the gradient here
+              radius={5}
             >
               <LabelList
                 dataKey="endpoint"
