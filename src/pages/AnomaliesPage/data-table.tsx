@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { DataTableViewOptions } from "./table-view-options"
 import { DrawerTrigger } from "@/components/ui/drawer"
 import type { Anomaly } from "@/services/AnomalyService"
-import { MoreHorizontal } from "lucide-react"
+import { Eye } from "lucide-react"
 import type { Dispatch, SetStateAction } from "react"
 
 interface DataTableProps<TData, TValue> {
@@ -98,7 +98,7 @@ export function AnomaliesDataTable<TData, TValue>({
                           {cell.column.id === "actions" ? (
                             <DrawerTrigger asChild>
                               <Button variant="ghost" size="icon" onClick={() => onSelect(row.original as Anomaly)}>
-                                <MoreHorizontal />
+                                <Eye />
                               </Button>
                             </DrawerTrigger>
                           ) : (
