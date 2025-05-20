@@ -1,6 +1,6 @@
 import { Copy } from "lucide-react";
-import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { Button } from "../components/ui/button.tsx";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip.tsx";
 
 
 export default function TruncateWithTooltip({ text, width = 500 }: { text: string, width: number }) {

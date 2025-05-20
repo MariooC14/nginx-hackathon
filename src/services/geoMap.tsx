@@ -13,13 +13,13 @@ const GeoMap = ({ locations, className }: GeoMapProps) => {
     map.addPin({
       lng: longitude,
       lat: latitude,
-      svgOptions: { color: '#00BC7DFF', radius: 0.3 },
+      svgOptions: { color: '#00BC7DFF', radius: 0.44 },
     });
   }
 
   const svgMap = map.getSVG({
     radius: 0.22,
-    color: '#27272AFF',
+    color: '#696666',
     shape: 'circle',
     backgroundColor: '#09090BFF',
   });

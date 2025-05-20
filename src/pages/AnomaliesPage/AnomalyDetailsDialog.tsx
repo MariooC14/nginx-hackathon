@@ -10,10 +10,10 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
-import TruncateWithTooltip from "@/components/TruncateWithTooltip";
+import TruncateWithTooltip from "@/lib/TruncateWithTooltip.tsx";
 import { useEffect, useState } from "react";
 import { IPtoLocation, type LocationData } from "@/services/gpsService";
-import GeoMap from "@/components/geoMap";
+import GeoMap from "@/services/geoMap.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, LoaderPinwheel } from "lucide-react";
 
