@@ -32,7 +32,7 @@ export function EndpointsChart() {
         setData(topPaths);
     }, []);
   return (
-    <Card className="@container/card w-full h-full gap-0">
+    <Card className="w-full h-full gap-0 col-span-1">
       <CardHeader>
         <CardTitle>Top requested endpoints</CardTitle>
       </CardHeader>

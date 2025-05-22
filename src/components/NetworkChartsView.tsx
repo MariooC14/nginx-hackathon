@@ -7,19 +7,19 @@ import { EndpointsChart } from "./charts/EndpointsChart";
 
 export default function NetworkChartsView() {
   return (
-    <div className="m-8">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="grid grid-rows-2 w-full gap-4 grid-cols-3">
+    <div className="m-4 sm:m-8">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-2">
           <SectionCards />
           <div className="col-span-4">
             <EndpointsChart />
           </div>
         </div>
 
-        <div className="col-span-1">
+        <div>
           <StatusPieChart />
         </div>
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <NetworkTrafficLineChart />
         </div>
         <UniqueVisitorsChart />
@@ -27,4 +27,4 @@ export default function NetworkChartsView() {
       </div>
     </div>
   )
-};
+}
