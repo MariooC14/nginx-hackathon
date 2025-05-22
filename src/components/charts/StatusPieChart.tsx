@@ -80,8 +80,8 @@ export default function StatusPieChart() {
         <CardDescription>April - May 2025</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 justify-center pb-0">
-        <ChartContainer config={chartConfig} className="flex justify-center items-center">
-          <PieChart>
+        <ChartContainer config={chartConfig} className="flex justify-center items-center w-full">
+          <PieChart width={320} height={320}>
             {/* --- Gradients --- */}
             <defs>
               <linearGradient id="pie-2xx" x1="0" y1="0" x2="1" y2="1">
@@ -107,7 +107,8 @@ export default function StatusPieChart() {
               data={chartData}
               dataKey="value"
               nameKey="status"
-              innerRadius={40}
+              innerRadius="60%"      // Use percentage for proportional thickness
+              outerRadius="100%"     // Use percentage for full size
               strokeWidth={1}
               labelLine={false}
               isAnimationActive={true}
@@ -130,7 +131,7 @@ export default function StatusPieChart() {
               layout="vertical"
               align="right"
               verticalAlign="middle"
-              className="flex flex-col gap-3 mr-25 text-xl text-muted-foreground"
+              className="!text-xs !gap-1 !mr-2 !w-[90px] max-w-[90px] flex flex-col"
             />
           </PieChart>
         </ChartContainer>
