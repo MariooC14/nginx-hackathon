@@ -1,3 +1,7 @@
+# Environmental Variables
+Must configure `VITE_GEOAPI_KEY` for Fetching geolocation data from [Geoapify](https://www.geoapify.com/). You can get a free API key by signing up on their website.
+And `VITE_OPENAI_API_KEY` for OpenAI API.
+
 # React + TypeScript + Vite
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
