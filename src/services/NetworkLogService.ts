@@ -13,7 +13,7 @@ class NetworkLogService {
 
   async parseNetworkLogs() {
     try {
-      const response = await fetch("/src/assets/access.log");
+      const response = await fetch(new URL("/src/assets/access.log", import.meta.url));
       const text = await response.text();
       const lines = text.split("\n").filter(line => line.trim() !== "");
 

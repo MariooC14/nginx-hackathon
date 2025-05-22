@@ -2,8 +2,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
-import DashboardPage from './pages/DashboardPage.tsx'
-import LogsPage from './pages/LogsPage.tsx'
+import DashboardPage from './pages/Dashboard/DashboardPage.tsx'
+import LogsPage from './pages/LogsPage/LogsPage.tsx'
 import AnomaliesPage from './pages/AnomaliesPage/page.tsx'
 
 createRoot(document.getElementById('root')!).render(

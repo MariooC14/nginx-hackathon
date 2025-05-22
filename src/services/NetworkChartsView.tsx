@@ -1,9 +1,9 @@
-import NetworkTrafficLineChart from "./charts/NetworkTrafficLineChart";
-import StatusPieChart from "./charts/StatusPieChart";
-import UniqueVisitorsChart from "./charts/UniqueVisitorsChart";
-import DataServedChart from "./charts/DataServedChart";
-import { SectionCards } from "./charts/SectionCards";
-import { EndpointsChart } from "./charts/EndpointsChart";
+import NetworkTrafficLineChart from "../components/charts/NetworkTrafficLineChart.tsx";
+import StatusPieChart from "../components/charts/StatusPieChart.tsx";
+import UniqueVisitorsChart from "../components/charts/UniqueVisitorsChart.tsx";
+import DataServedChart from "../components/charts/DataServedChart.tsx";
+import { SectionCards } from "../components/charts/SectionCards.tsx";
+import { EndpointsChart } from "../components/charts/EndpointsChart.tsx";
 
 export default function NetworkChartsView() {
   return (

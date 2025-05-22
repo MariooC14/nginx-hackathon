@@ -14,14 +14,14 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button.tsx"
+import { Checkbox } from "@/components/ui/checkbox.tsx"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu.tsx"
 import {
   Table,
   TableBody,
@@ -29,15 +29,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Switch } from "@/components/ui/switch"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/table.tsx"
+import { Switch } from "@/components/ui/switch.tsx"
+import { Input } from "@/components/ui/input.tsx"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { networkLogService } from "@/services/NetworkLogService"
-import { formatDate } from "@/lib/utils"
+import { networkLogService } from "@/services/NetworkLogService.ts"
+import { formatDate } from "@/lib/utils.ts"
 // import { anomalyService } from "@/services/AnomalyService"
-import TruncateWithTooltip from "@/components/TruncateWithTooltip.tsx";
-import { anomalyService } from "@/services/AnomalyService"
+import TruncateWithTooltip from "@/lib/TruncateWithTooltip.tsx";
+import { anomalyService } from "@/services/AnomalyService.ts"
 
 export type Request = {
   method: string;

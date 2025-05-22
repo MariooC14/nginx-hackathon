@@ -1,5 +1,5 @@
-import DataTable from "@/components/data-table";
-import { TypographyH1 } from "@/components/ui/TypographyH1";
+import DataTable from "@/pages/LogsPage/data-table.tsx";
+import { TypographyH1 } from "@/components/ui/TypographyH1.tsx";
 
 export default function LogsPage() {
 
