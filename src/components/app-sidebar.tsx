@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/sidebar"
 import { Link } from "react-router"
 import { ModeToggle } from "./mode-toggle"
+import { Button } from "./ui/button"
+import { useAboutDialog } from "./AboutDialogProvider"
 
 // Menu items.
 const items = [
@@ -34,6 +36,8 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const { setAboutOpen } = useAboutDialog();;
+
   return (
     <Sidebar variant="floating">
       <SidebarContent>
@@ -56,7 +60,10 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
+        <div className="flex gap-2">
+          <ModeToggle />
+          <Button className="text-xs flex-1" variant="outline" onClick={() => setAboutOpen(true)}>About</Button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   )
