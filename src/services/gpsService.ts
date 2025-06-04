@@ -65,16 +65,18 @@ export async function IPtoLocation(...ips: string[]): Promise<LocationData[]> {
       continue;
     }
 
-    const response = await fetch(
-      `https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${apiKey}`
-    );
-    const data: GeoAPIResponse = await response.json();
-    const locationData = parseLocationData(data);
+    if (apiKey) {
+      const response = await fetch(
+        `https://api.geoapify.com/v1/ipinfo?ip=${ip}&apiKey=${apiKey}`
+      );
+      const data: GeoAPIResponse = await response.json();
+      const locationData = parseLocationData(data);
 
-    geoCache[ip] = locationData;
-    await saveGeoCache();
-    console.log(`Cache miss for IP: ${ip}, fetched from API`);
-    locations.push(locationData);
+      geoCache[ip] = locationData;
+      await saveGeoCache();
+      console.log(`Cache miss for IP: ${ip}, fetched from API`);
+      locations.push(locationData);
+    }
   }
   return locations;
 }

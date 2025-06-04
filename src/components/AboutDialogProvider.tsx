@@ -44,7 +44,7 @@ export default function AboutDialogProvider({ children }: { children: ReactNode 
               <li>Celso Vinicius Franco Ferreira - <Link className="underline text-blue-500" to="https://github.com/0SL3C">0SL3C</Link></li>
             </ul>
             <hr className="my-2" />
-            The data used in this project is from a local log file of 9999 requests to a web server, which was provided by the hackathon organizers.
+            The data used in this project is from a local log file of 9999 requests to a web server, which was provided by the hackathon organizers. The app was not designed to be responsive, so it may look poor on smaller screens.
             <hr className="my-2" />
             <strong>Note:</strong> The geolocation and AI features are not functional as they require a valid API key, which is not provided in this project.
           </ScrollArea>
